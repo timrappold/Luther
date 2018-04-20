@@ -34,18 +34,42 @@ This is a webscraping and linear regression project. The goal is to describe and
 The goal of webscraping is to get housing _sales_ data from the previous three years for the zipcodes in question. `requests` and `BeautifulSoup` will tbe the go-to libraries to grab the following information:
 
 * Sale price
+
 * Sale date
+
 * Address
+
 * Neighborhood
+
 * Date of first offering (if available)
+
 * House features (contained in box/table called "Home Facts":
-  * Single family home/condo/etc
-  * Square footage
-  * Finished square footage
-  * Lot size
-  * Number of bedrooms
-  * Number of bathrooms
-  * Number of stories
+
+  `home_soup.find("div", class_="facts-table")`:
+
+  - [x] Num Bedrooms `Beds`
+
+  - [x] Num Bath `Baths`
+
+  - [x] Finished square footage `Finished Sq. Ft.`
+
+  - [x] Unfinished square footage `Unfinished Sq. Ft.`
+
+  - [x] Total square feet `Total Sq. Ft.`
+
+  - [x] `Stories`
+
+  - [x] Lot size `Lot Size`
+
+  - [x] Single family home/condo/etc `Style` -> Single Family Residential
+
+  - [x] `Year Built`
+
+  - [x] `Year Renovated`
+
+  - [x] `County`
+
+    ​
 
 TODO: 
 
