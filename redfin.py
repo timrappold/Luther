@@ -267,25 +267,36 @@ def get_home_stats(home_rel_url):
     return {**home_rel_url_dict, **zipcode, **property_history, **home_facts}
 
 
-def scrape_home_stats(list_of_relative_urls=None):
+def scrape_home_stats(list_of_relative_urls=None, pickle_directory='pickles/'):
 
     if list_of_relative_urls is None:
+        print("List of relative URLS is NONE, loading default data set.")
         list_of_relative_urls = load_everything_pickle()
 
     list_of_dicts = []
 
-    for home_rel_url in list_of_relative_urls:
+    for i, home_rel_url in enumerate(list_of_relative_urls):
+
+        print('Processing link #{}: {}'.format(i, home_rel_url))
         list_of_dicts.append(get_home_stats(home_rel_url))
+
+        with open(pickle_directory + 'home_stats_all.pkl', 'wb') as picklefile:
+            pickle.dump(list_of_dicts, picklefile)
+
         r = 0.2 * np.random.randn(1) + 1
-        print(r)
         time.sleep(r)
 
     return list_of_dicts
 
 
-
 def main():
     pass
 
+    scrape_home_stats()
+
 if __name__ == '__main__':
     main()
+
+    test_list = load_everything_pickle()
+    test_list = np.random.choice(test_list, size=30, replace=False)
+    scrape_home_stats(test_list)
