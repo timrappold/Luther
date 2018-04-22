@@ -160,7 +160,7 @@ def combine_zipcode_listings_pickles_into_one(pickle_directory='pickles/'):
 ### GET DATA FROM INDIVIDUAL HOME LISTING ###################################################
 
 
-def load_everything_pickle(pickle_file='pickles/listing_urls_all.pkl'):
+def load_all_urls(pickle_file='pickles/listing_urls_all.pkl'):
     """
     Loads pickle file that contains the list of strings of relative URLs of individual home listings on Redfin.
 
@@ -197,7 +197,7 @@ def get_property_history(home_soup):
     :return:
     """
     sold_row_soup = home_soup.find("tr", class_="sold-row PropertyHistoryEventRow")
-    #print(sold_row_soup)
+
     if sold_row_soup is not None:
         date = sold_row_soup.find('td', class_='date-col nowrap').get_text()
         price = sold_row_soup.find('td', class_='price-col number').get_text()
@@ -210,11 +210,6 @@ def get_property_history(home_soup):
         property_history = {'Last Sold': None,
                             'Sales Price': None,
                             }
-
-        #home_soup.find("div", class_="top-stats") is not None:
-        #top_stats_soup = home_soup.find("div", class_="top-stats")
-        #date = top_stats_soup.find('td', class_='date-col nowrap').get_text()
-        #price = top_stats_soup.find('td', class_='price-col number').get_text()
 
     return property_history
 
@@ -267,11 +262,14 @@ def get_home_stats(home_rel_url):
     return {**home_rel_url_dict, **zipcode, **property_history, **home_facts}
 
 
+### SCRAPE AND SAVE ######################################################################
+
+
 def scrape_home_stats(list_of_relative_urls=None, pickle_directory='pickles/'):
 
     if list_of_relative_urls is None:
         print("List of relative URLS is NONE, loading default data set.")
-        list_of_relative_urls = load_everything_pickle()
+        list_of_relative_urls = load_all_urls()
 
     list_of_dicts = []
 
@@ -280,23 +278,40 @@ def scrape_home_stats(list_of_relative_urls=None, pickle_directory='pickles/'):
         print('Processing link #{}: {}'.format(i, home_rel_url))
         list_of_dicts.append(get_home_stats(home_rel_url))
 
-        with open(pickle_directory + 'home_stats_all.pkl', 'wb') as picklefile:
-            pickle.dump(list_of_dicts, picklefile)
+        if i in list(range(0, len(list_of_relative_urls), 250)):
+            with open(pickle_directory + 'home_stats_all_{}.pkl'.format(i), 'wb') as picklefile:
+                pickle.dump(list_of_dicts, picklefile)
 
-        r = 0.2 * np.random.randn(1) + 1
+        r = 0.2 * np.random.randn(1) + .5
         time.sleep(r)
+
+    with open(pickle_directory + 'home_stats_all.pkl', 'wb') as picklefile:
+        pickle.dump(list_of_dicts, picklefile)
 
     return list_of_dicts
 
 
+### DATA ANALYSIS #####################################################################################
+
+
+def load_all_home_stats(pickle_file='pickles/home_stats_all.pkl'):
+    """
+    Loads pickle file that contains the stats of all individual home listings on scraped from Redfin.
+
+    :param pickle_file: type(str)
+    :return: list_of_relative_urls, type(list)
+    """
+    with open(pickle_file, 'rb') as picklefile:
+        all_home_stats = pickle.load(picklefile)
+
+    return all_home_stats
+
+
 def main():
+    all_urls = load_all_urls()
+    scrape_home_stats(all_urls)
     pass
 
-    scrape_home_stats()
 
 if __name__ == '__main__':
     main()
-
-    test_list = load_everything_pickle()
-    test_list = np.random.choice(test_list, size=30, replace=False)
-    scrape_home_stats(test_list)
