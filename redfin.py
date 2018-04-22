@@ -10,25 +10,27 @@ from selenium import webdriver
 
 pd.set_option('display.max_columns', None)
 
+### GET LISTING URLS ######################################################################
 
-def construct_filter_url(zipcode, crawler=1):
+
+def construct_filter_url(zipcode, page_num=1):
     """
-    Return a landing url that filters by zipcode. Crawler is used to determine the page of the search
+    Return a landing url that filters by zipcode. page_num is used to determine the page of the search
     results. Redfin search results are up to 18 pages long.
 
     In the current version, the filter is set to 'sold-3yr' and
     could be expanded to include 'sold-all'.
 
     :param zipcode: str or int.
-    :param crawler:
+    :param page_num:
     :return: url, type string.
     """
 
-    assert 1 <= crawler <= 18, 'URL page crawler is outside range [1,18].'
-    if crawler == 1:
-        crawler_string = ''
+    assert 1 <= page_num <= 18, 'URL page_num is outside range [1,18].'
+    if page_num == 1:
+        page_num_string = ''
     else:
-        crawler_string = '/page-' + str(crawler)
+        page_num_string = '/page-' + str(page_num)
 
     zipcode = str(zipcode)
 
@@ -38,29 +40,9 @@ def construct_filter_url(zipcode, crawler=1):
            + zipcode
            + '/filter/include='
            + filter_
-           + crawler_string)
+           + page_num_string)
 
     return url
-
-
-def make_soup_via_requests(url):
-    """
-    Return a Soup object from a url using requests. Use for home_listing urls. Doesn't
-    successfully apply filters in landing url.
-
-    :param url: str
-    :return: BeautifulSoup object
-    """
-
-    hdr = {'User-Agent': 'Mozilla/5.0'}
-
-    response = requests.get(url, headers=hdr)
-
-    assert response.status_code == 200, "HTML status code isn't 200 on page {}.".format(url)
-    page = response.text
-    #print('Page is {} long.'.format(len(page)))
-
-    return BeautifulSoup(page, "lxml")
 
 
 def make_soup_via_selenium(url):
@@ -96,57 +78,168 @@ def find_home_listing_urls(soup):
     return listing_url_list
 
 
-def parse_home_listing(listing_url):
+def save_links_for_every_zipcode(zipcode_dict=None, page_range=18):
     """
-    Finds all the relative individual house data links on a landing page.
-    """
-    url = 'https://www.redfin.com/' + listing_url
+    Saves the landing pages for every zipcode in zipcode_dict in a pickle file in ./pickles/.
+    The data structure for the landing page urls is a list of strings.
 
-    home_soup = make_soup_via_requests(url)
-    return home_soup
-
-
-
-def main():
-    """
-    Runs
+    :param zipcode_dict: dict with key = 'zipcode', value = ('City','State'). E.g.: {'94605': ('Oakland', 'CA'),...}.
+                        Defaults to zipcode_dict defined in function body.
+    :param page_range: int. Works with an integer in the range [1,18]. Redfin search results contain 18 pages or fewer.
+                        Defaults to page_range = 18.
     :return: None
+
+    This function depends on the following functions:
+
+        - construct_filter_url(zipcode, page_num=c+1)
+        - make_soup_via_selenium(url)
+        - find_home_listing_urls(landing_soup)
+
     """
-    #zipcode = '94605'  # listing links are pickled!
-    #zipcode = '94610'
-    #zipcode = '94110'
-    #zipcode = '95476'
-    #zipcode = '94611'
 
-    list_of_zipcodes = ['94549',
-                        '90403',
-                        '90049',
-                        '90292',
-                        '90301',
-                        '11211',
-                        '10024',
-                        '48503',
-                        '77373',
-                        ]
+    assert 1 <= page_range <= 18, 'page_range is outside [1,18].'
 
-    for zipcode in list_of_zipcodes:
+    if zipcode_dict is None:
+        zipcode_dict = {'94605': ('Oakland', 'CA'),
+                        '94610': ('Oakland', 'CA'),
+                        '94611': ('Oakland', 'CA'),
+                        '94110': ('San Francisco', 'CA'),
+                        '95476': ('Sonoma', 'CA'),
+                        '94549': ('Lafayette', 'CA'),
+                        '90403': ('Santa Monica', 'CA'),
+                        '90049': ('Los Angeles', 'CA'),
+                        '90292': ('Los Angeles', 'CA'),
+                        '90301': ('Los Angeles', 'CA'),
+                        '11211': ('Brooklyn', 'NY'),
+                        '10024': ('New York', 'NY'),
+                        '48503': ('Flint', 'MI'),
+                        '77373': ('Houston', 'TX'),
+                        }
+
+    for zipcode, city in zipcode_dict.items():
 
         listings = []
 
-        for c in range(18):
-            url = construct_filter_url(zipcode, crawler=c+1)
+        for c in range(page_range):
+            url = construct_filter_url(zipcode, page_num=c+1)
             landing_soup = make_soup_via_selenium(url)
             listings = listings + find_home_listing_urls(landing_soup)
 
-            # the following saves a pickle with every iteration
-            with open('pickles/listing_urls_' + zipcode + 'page_' + str(c+1) + '.pkl', 'wb') as picklefile:
-                pickle.dump(listings, picklefile)
+        # the following saves a pickle with every zipcode
+        with open('pickles/listing_urls_' + zipcode + '_all' + '.pkl', 'wb') as picklefile:
+            pickle.dump(listings, picklefile)
 
         print(listings)
 
+    return None
 
-    return listings
 
+def combine_zipcode_listings_pickles_into_one(pickle_directory='pickles/'):
+    """
+    Combines all pickles ending in ...18.pkl into one pickle named 'listing_urls_all.pkl'. The list of strings are
+    combined into one list of strings; only unique URLs are retained.
+    :param pickle_directory: str.
+    :return: None
+    """
+    listing_urls = []
+
+    for file in os.listdir(pickle_directory):
+        with open(pickle_directory + file, 'rb') as picklefile:
+            if file.endswith("18.pkl"):
+                listing_urls += pickle.load(picklefile)
+
+    listing_urls_unique = list(set(listing_urls))
+
+    with open(pickle_directory + 'listing_urls_all.pkl', 'wb') as picklefile:
+        pickle.dump(listing_urls_unique, picklefile)
+
+    return None
+
+### GET DATA FROM INDIVIDUAL HOME LISTING ###################################################
+
+
+def load_everything_pickle(pickle_file='pickles/listing_urls_all.pkl'):
+    """
+    Loads pickle file that contains the list of strings of relative URLs of individual home listings on Redfin.
+
+    :param pickle_file: type(str)
+    :return: list_of_relative_urls, type(list)
+    """
+    with open(pickle_file, 'rb') as picklefile:
+        list_of_relative_urls = pickle.load(picklefile)
+
+    return list_of_relative_urls
+
+
+def get_home_soup(home_rel_url):
+    """
+    Accepts the relative URL for an individual home listing and returns a BeautifulSoup object.
+
+    :param home_rel_url: str. Relative URL string that can be appended to the root 'https://www.redfin.com'.
+                             E.g. '/CA/Oakland/9863-Lawlor-St-94605/home/1497266'
+    :return: BeautifulSoup object for an individual listing's website.
+    """
+
+    url = 'https://www.redfin.com' + home_rel_url
+    hdr = {'User-Agent': 'Mozilla/5.0'}
+    response = requests.get(url, headers=hdr)
+    assert response.status_code == 200, "HTML status code isn't 200 on page {}.".format(url)
+
+    return BeautifulSoup(response.text, "lxml")
+
+
+def get_property_history(home_soup):
+    """
+
+    :param home_soup:
+    :return:
+    """
+    sold_row_soup = home_soup.find("tr", class_="sold-row PropertyHistoryEventRow")
+
+    event = sold_row_soup.find('div', class_='event').get_text()
+    date = sold_row_soup.find('td', class_='date-col nowrap').get_text()
+    price = sold_row_soup.find('td', class_='price-col number').get_text()
+
+    property_history = {'Last Sold': date,
+                        'Event': event,
+                        'Sales Price': price,
+                        }
+
+    return property_history
+
+
+def get_home_facts(home_soup):
+    """
+
+    :param home_soup:
+    :return:
+    """
+    facts_table = home_soup.find("div", class_="facts-table")
+    table_row = facts_table.find_all(class_="table-row")
+
+    home_facts = {}
+    for row in table_row:
+        label = row.find(class_='table-label').get_text()
+        value = row.find(class_='table-value').get_text()
+        home_facts[label] = value
+
+    return home_facts
+
+
+def get_home_stats(home_soup):
+    """
+
+    :param home_soup:
+    :return:
+    """
+    property_history = get_property_history(home_soup)
+    home_facts = get_home_facts(home_soup)
+
+    return {**property_history, **home_facts}
+
+
+def main():
+    pass
 
 if __name__ == '__main__':
-    listings = main()
+    main()
