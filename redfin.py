@@ -1,7 +1,9 @@
 import os
 import sys
 import pickle
+import time
 
+import numpy as np
 import pandas as pd
 
 import requests
@@ -183,7 +185,7 @@ def get_home_soup(home_rel_url):
     url = 'https://www.redfin.com' + home_rel_url
     hdr = {'User-Agent': 'Mozilla/5.0'}
     response = requests.get(url, headers=hdr)
-    assert response.status_code == 200, "HTML status code isn't 200 on page {}.".format(url)
+    assert response.status_code == 200, "HTML status code isn't 200 for {}.".format(home_rel_url)
 
     return BeautifulSoup(response.text, "lxml")
 
@@ -191,19 +193,28 @@ def get_home_soup(home_rel_url):
 def get_property_history(home_soup):
     """
 
-    :param home_soup:
+    :param home_soup: BeautifulSoup object made by get_home_soup(home_rel_url).
     :return:
     """
     sold_row_soup = home_soup.find("tr", class_="sold-row PropertyHistoryEventRow")
+    #print(sold_row_soup)
+    if sold_row_soup is not None:
+        date = sold_row_soup.find('td', class_='date-col nowrap').get_text()
+        price = sold_row_soup.find('td', class_='price-col number').get_text()
 
-    event = sold_row_soup.find('div', class_='event').get_text()
-    date = sold_row_soup.find('td', class_='date-col nowrap').get_text()
-    price = sold_row_soup.find('td', class_='price-col number').get_text()
+        property_history = {'Last Sold': date,
+                            'Sales Price': price,
+                            }
 
-    property_history = {'Last Sold': date,
-                        'Event': event,
-                        'Sales Price': price,
-                        }
+    else:
+        property_history = {'Last Sold': None,
+                            'Sales Price': None,
+                            }
+
+        #home_soup.find("div", class_="top-stats") is not None:
+        #top_stats_soup = home_soup.find("div", class_="top-stats")
+        #date = top_stats_soup.find('td', class_='date-col nowrap').get_text()
+        #price = top_stats_soup.find('td', class_='price-col number').get_text()
 
     return property_history
 
@@ -211,8 +222,8 @@ def get_property_history(home_soup):
 def get_home_facts(home_soup):
     """
 
-    :param home_soup:
-    :return:
+    :param home_soup: BeautifulSoup object made by get_home_soup(home_rel_url).
+    :return: dict of (key, value) pairs from the Home Facts table.
     """
     facts_table = home_soup.find("div", class_="facts-table")
     table_row = facts_table.find_all(class_="table-row")
@@ -226,16 +237,51 @@ def get_home_facts(home_soup):
     return home_facts
 
 
-def get_home_stats(home_soup):
+def get_zipcode(home_soup):
     """
 
-    :param home_soup:
-    :return:
+    :param home_soup: BeautifulSoup object made by get_home_soup(home_rel_url).
+    :return: dict. E.g. {'Zip Code': '94605'}
     """
+    citystatezip_soup = home_soup.find('span', class_='citystatezip')
+    zipcode = citystatezip_soup.find('span', class_='postal-code').get_text()
+
+    return {'Zip Code': zipcode}
+
+
+def get_home_stats(home_rel_url):
+    """
+    Aggregates the functions get_zipcode, get_home_facts, and get_property_history and returns
+    the single-source-of-truth dictionary of a home listing's statistics.
+    :param home_rel_url: relative URL of home listing. E.g.: '/CA/Oakland/888-Warfield-Ave-94610/home/1881044'
+    :return: dict. Contains stats for one home. Ready to be aggregated in a list and then converted to pd.DataFrame.
+    """
+    home_soup = get_home_soup(home_rel_url)
+
+    zipcode = get_zipcode(home_soup)
     property_history = get_property_history(home_soup)
     home_facts = get_home_facts(home_soup)
 
-    return {**property_history, **home_facts}
+    home_rel_url_dict = {'rURL': home_rel_url}
+
+    return {**home_rel_url_dict, **zipcode, **property_history, **home_facts}
+
+
+def scrape_home_stats(list_of_relative_urls=None):
+
+    if list_of_relative_urls is None:
+        list_of_relative_urls = load_everything_pickle()
+
+    list_of_dicts = []
+
+    for home_rel_url in list_of_relative_urls:
+        list_of_dicts.append(get_home_stats(home_rel_url))
+        r = 0.2 * np.random.randn(1) + 1
+        print(r)
+        time.sleep(r)
+
+    return list_of_dicts
+
 
 
 def main():
