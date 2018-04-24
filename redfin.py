@@ -11,6 +11,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 
 pd.set_option('display.max_columns', None)
+pd.set_option("display.precision", 3)
+
 
 ### GET LISTING URLS ######################################################################
 
@@ -101,6 +103,7 @@ def save_links_for_every_zipcode(zipcode_dict=None, page_range=18):
 
     assert 1 <= page_range <= 18, 'page_range is outside [1,18].'
 
+
     if zipcode_dict is None:
         zipcode_dict = {'94605': ('Oakland', 'CA'),
                         '94610': ('Oakland', 'CA'),
@@ -117,6 +120,8 @@ def save_links_for_every_zipcode(zipcode_dict=None, page_range=18):
                         '48503': ('Flint', 'MI'),
                         '77373': ('Houston', 'TX'),
                         }
+
+
 
     for zipcode, city in zipcode_dict.items():
 
@@ -265,33 +270,43 @@ def get_home_stats(home_rel_url):
 ### SCRAPE AND SAVE ######################################################################
 
 
-def scrape_home_stats(list_of_relative_urls=None, pickle_directory='pickles/'):
+def scrape_home_stats(list_of_relative_urls=None, pickle_directory='pickles/', save_every=250):
+    """
+    Loops through list_of_relative_urls, scrapes home listing data, and stores it all in a pickle. As as
+    safeguard against crashes or website defenses, this function uses a sleep timer which delays each iteration
+    by half a second +/- some random noise. The function also saves intermediate results before loop is complete
+    using save_every.
+    :param list_of_relative_urls: list of strings. Relative URLs for indivi. home listings; append to https://www.redfin.com
+    :param pickle_directory: str. Path where pkl files are saved to.
+    :param save_every: int. Saves every
 
+    :return: list of dicts. Contains all scraped home listing data. Convert to DF via pd.DataFrame(all_home_stats).
+    """
     if list_of_relative_urls is None:
         print("List of relative URLS is NONE, loading default data set.")
         list_of_relative_urls = load_all_urls()
 
-    list_of_dicts = []
+    all_home_stats = []
 
     for i, home_rel_url in enumerate(list_of_relative_urls):
 
         print('Processing link #{}: {}'.format(i, home_rel_url))
-        list_of_dicts.append(get_home_stats(home_rel_url))
+        all_home_stats.append(get_home_stats(home_rel_url))
 
-        if i in list(range(0, len(list_of_relative_urls), 250)):
+        if i in list(range(0, len(list_of_relative_urls), save_every)):
             with open(pickle_directory + 'home_stats_all_{}.pkl'.format(i), 'wb') as picklefile:
-                pickle.dump(list_of_dicts, picklefile)
+                pickle.dump(all_home_stats, picklefile)
 
         r = 0.2 * np.random.randn(1) + .5
         time.sleep(r)
 
     with open(pickle_directory + 'home_stats_all.pkl', 'wb') as picklefile:
-        pickle.dump(list_of_dicts, picklefile)
+        pickle.dump(all_home_stats, picklefile)
 
-    return list_of_dicts
+    return all_home_stats
 
 
-### DATA ANALYSIS #####################################################################################
+### LOAD and CLEAN DATA #####################################################################################
 
 
 def load_all_home_stats(pickle_file='pickles/home_stats_all.pkl'):
@@ -307,9 +322,102 @@ def load_all_home_stats(pickle_file='pickles/home_stats_all.pkl'):
     return all_home_stats
 
 
+def clean_lot_size(string):
+    """
+    Converts the string in column Lot Size to a float in units sq. ft. If original string references units 'Acres', the
+    value is converted to square feet.
+    :param string: str.
+    :return: float.
+    """
+    string = string.replace(',', '')
+
+    if string.endswith('Acres'):
+        string = string.strip('Acres')
+        mult = 43560.
+        return float(string) * mult
+
+    elif string.endswith('Sq. Ft.'):
+        string = string.strip('Sq. Ft.')
+        mult = 1.
+        return float(string) * mult
+
+    else:
+        return np.nan
+
+
+def clean_home_stats_df(all_home_stats):
+    """
+    Accepts the list of dictionaries loaded via load_all_home_stats and returns a cleaned DataFrame.
+
+    :param all_home_stats: accepts a raw home_stats_df straight from the pickle via load_all_home_stats
+    :return: pd.DataFrame home_stats_df
+    """
+    """ Removes columns with spotty data. 
+
+    ['Sales Price']: Removes rows without a Sales Price, removes all non-numeric characters from 'Sales Price'
+    """
+
+    home_stats_df = pd.DataFrame(all_home_stats)
+
+    drop_list = ['Accessible',
+                 'APN',
+                 'Basement',
+                 'Features',
+                 'Finished Sq. Ft.',
+                 'Garage',
+                 'HOA Dues',
+                 'Parking Spaces', ]
+
+    home_stats_df.drop(drop_list, axis=1, inplace=True)
+
+    home_stats_df.fillna(value='-', inplace=True)  # Do this so string methods can be universally applied below.
+
+    to_numeric_list = ['Baths',
+                       'Beds',
+                       'Sales Price',
+                       'Stories',
+                       'Total Sq. Ft.',
+                       'Unfinished Sq. Ft.',
+                       'Year Built',
+                       'Year Renovated',
+                       ]
+
+    for key in to_numeric_list:
+        home_stats_df[key] = home_stats_df[key].map(lambda string: string.replace('$', ''))
+        home_stats_df[key] = home_stats_df[key].map(lambda string: string.replace(',', ''))
+
+        home_stats_df[key] = pd.to_numeric(home_stats_df[key], errors='coerce')
+
+    home_stats_df = home_stats_df[pd.notnull(home_stats_df['Sales Price'])]
+    
+
+    home_stats_df = home_stats_df[pd.notnull(home_stats_df['Last Sold'])]
+    home_stats_df['Last Sold'] = pd.to_datetime(home_stats_df['Last Sold'], format='%b %d, %Y')
+
+    # Creates a new Lot Size column in units sq. ft. and drop the old column
+    home_stats_df['Lot Size Sq. Ft.'] = home_stats_df['Lot Size'].map(clean_lot_size)
+    home_stats_df.drop('Lot Size', axis=1, inplace=True)
+
+    # Remove +4 zip code extension and eliminate errant zip codes
+    home_stats_df['Zip Code'] = home_stats_df['Zip Code'].map(lambda string: string.split('-')[0])
+    zip_group = home_stats_df.groupby('Zip Code')
+    home_stats_df = zip_group.filter(lambda x: len(x) > 100)
+
+    # Remove Styles with low incidence. I.e. "Unknown, Vacant Land, Mobile Homes,
+
+    drop_styles_list = ['Vacant Land', 'Other', 'Unknown', 'Mobile/Manufactured Home']
+    home_stats_df = home_stats_df[~home_stats_df['Style'].isin(drop_styles_list)]
+
+    return home_stats_df
+
+
+
+
+
 def main():
-    all_urls = load_all_urls()
-    scrape_home_stats(all_urls)
+    #all_urls = load_all_urls()
+    #scrape_home_stats(all_urls)
+
     pass
 
 
