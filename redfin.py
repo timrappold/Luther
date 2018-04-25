@@ -152,7 +152,7 @@ def combine_zipcode_listings_pickles_into_one(pickle_directory='pickles/'):
 
     for file in os.listdir(pickle_directory):
         with open(pickle_directory + file, 'rb') as picklefile:
-            if file.endswith("18.pkl"):
+            if file.endswith("_all.pkl"):
                 listing_urls += pickle.load(picklefile)
 
     listing_urls_unique = list(set(listing_urls))
@@ -367,7 +367,6 @@ def clean_home_stats_df(all_home_stats):
                  'Garage',
                  'HOA Dues',
                  'Parking Spaces',
-                 'Year Renovated',
                  'Unfinished Sq. Ft.',
                  ]
 
@@ -381,6 +380,7 @@ def clean_home_stats_df(all_home_stats):
                        'Stories',
                        'Total Sq. Ft.',
                        'Year Built',
+                       'Year Renovated',
                        ]
 
     for key in to_numeric_list:
