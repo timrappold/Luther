@@ -2,6 +2,7 @@ import os
 import sys
 import pickle
 import time
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
@@ -103,8 +104,8 @@ def save_links_for_every_zipcode(zipcode_dict=None, page_range=18):
 
     assert 1 <= page_range <= 18, 'page_range is outside [1,18].'
 
-
     if zipcode_dict is None:
+        print('Using DEFAULT zipcode_dict...')
         zipcode_dict = {'94605': ('Oakland', 'CA'),
                         '94610': ('Oakland', 'CA'),
                         '94611': ('Oakland', 'CA'),
@@ -121,9 +122,8 @@ def save_links_for_every_zipcode(zipcode_dict=None, page_range=18):
                         '77373': ('Houston', 'TX'),
                         }
 
-
-
     for zipcode, city in zipcode_dict.items():
+        print('Getting landing page for {} in {}'.format(zipcode, city))
 
         listings = []
 
@@ -366,7 +366,10 @@ def clean_home_stats_df(all_home_stats):
                  'Finished Sq. Ft.',
                  'Garage',
                  'HOA Dues',
-                 'Parking Spaces', ]
+                 'Parking Spaces',
+                 'Year Renovated',
+                 'Unfinished Sq. Ft.',
+                 ]
 
     home_stats_df.drop(drop_list, axis=1, inplace=True)
 
@@ -377,9 +380,7 @@ def clean_home_stats_df(all_home_stats):
                        'Sales Price',
                        'Stories',
                        'Total Sq. Ft.',
-                       'Unfinished Sq. Ft.',
                        'Year Built',
-                       'Year Renovated',
                        ]
 
     for key in to_numeric_list:
@@ -389,13 +390,17 @@ def clean_home_stats_df(all_home_stats):
         home_stats_df[key] = pd.to_numeric(home_stats_df[key], errors='coerce')
 
     home_stats_df = home_stats_df[pd.notnull(home_stats_df['Sales Price'])]
-    
 
     home_stats_df = home_stats_df[pd.notnull(home_stats_df['Last Sold'])]
     home_stats_df['Last Sold'] = pd.to_datetime(home_stats_df['Last Sold'], format='%b %d, %Y')
-
+    home_stats_df = home_stats_df[home_stats_df['Last Sold'] > datetime.strptime('2015-05-01', '%Y-%m-%d')]
+    home_stats_df['Weeks'] = ((home_stats_df['Last Sold'])
+                              .map(lambda td: (td - home_stats_df['Last Sold'].min()).days // 7)
+                              )
+    home_stats_df['Month'] = home_stats_df['Last Sold'].map(lambda s: s.month)
     # Creates a new Lot Size column in units sq. ft. and drop the old column
     home_stats_df['Lot Size Sq. Ft.'] = home_stats_df['Lot Size'].map(clean_lot_size)
+
     home_stats_df.drop('Lot Size', axis=1, inplace=True)
 
     # Remove +4 zip code extension and eliminate errant zip codes
@@ -411,15 +416,29 @@ def clean_home_stats_df(all_home_stats):
     return home_stats_df
 
 
-
-
-
 def main():
-    #all_urls = load_all_urls()
-    #scrape_home_stats(all_urls)
-
     pass
 
 
 if __name__ == '__main__':
-    main()
+
+    zipcode_dict2 = {'94601': ('Fruitvale', 'Oakland', 'CA'),
+                     '94603': ('Elmhurst', 'Oakland', 'CA'),
+                     '94607': ('West Oakland', 'Oakland', 'CA'),
+                     '94618': ('Rockridge', 'Oakland', 'CA'),
+                     '94609': ('Temescal', 'Oakland', 'CA'),
+                     '94602': ('Lincoln Highlands', 'Oakland', 'CA'),
+                     '94619': ('Redwood Heights', 'Oakland', 'CA'),
+                     '94606': ('Highland Terrace', 'Oakland', 'CA'),
+                     '90221': ('East Compton', 'Los Angeles', 'CA'),
+                     '90056': ('Ladeira Heights', 'Los Angeles', 'CA'),
+                     '90232': ('Culver City', 'Los Angeles', 'CA'),
+                     '90039': ('Atwater Village', 'Los Angeles', 'CA'),
+                     '90026': ('Silver Lake', 'Los Angeles', 'CA'),
+                     '90041': ('Eagle Rock', 'Los Angeles', 'CA'),
+                     '90024': ('Westwood', 'Los Angeles', 'CA'),
+                     '90069': ('Sunset Strip', 'Los Angeles', 'CA'),
+                     '90027': ('Los Feliz', 'Los Angeles', 'CA'),
+                     }
+
+    save_links_for_every_zipcode(zipcode_dict=zipcode_dict2)
