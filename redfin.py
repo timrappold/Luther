@@ -106,20 +106,9 @@ def save_links_for_every_zipcode(zipcode_dict=None, page_range=18):
 
     if zipcode_dict is None:
         print('Using DEFAULT zipcode_dict...')
+
         zipcode_dict = {'94605': ('Oakland', 'CA'),
                         '94610': ('Oakland', 'CA'),
-                        '94611': ('Oakland', 'CA'),
-                        '94110': ('San Francisco', 'CA'),
-                        '95476': ('Sonoma', 'CA'),
-                        '94549': ('Lafayette', 'CA'),
-                        '90403': ('Santa Monica', 'CA'),
-                        '90049': ('Los Angeles', 'CA'),
-                        '90292': ('Los Angeles', 'CA'),
-                        '90301': ('Los Angeles', 'CA'),
-                        '11211': ('Brooklyn', 'NY'),
-                        '10024': ('New York', 'NY'),
-                        '48503': ('Flint', 'MI'),
-                        '77373': ('Houston', 'TX'),
                         }
 
     for zipcode, city in zipcode_dict.items():
@@ -309,112 +298,6 @@ def scrape_home_stats(list_of_relative_urls=None, pickle_directory='pickles/', s
 ### LOAD and CLEAN DATA #####################################################################################
 
 
-def load_all_home_stats(pickle_file='pickles/home_stats_all.pkl'):
-    """
-    Loads pickle file that contains the stats of all individual home listings on scraped from Redfin.
-
-    :param pickle_file: type(str)
-    :return: list_of_relative_urls, type(list)
-    """
-    with open(pickle_file, 'rb') as picklefile:
-        all_home_stats = pickle.load(picklefile)
-
-    return all_home_stats
-
-
-def clean_lot_size(string):
-    """
-    Converts the string in column Lot Size to a float in units sq. ft. If original string references units 'Acres', the
-    value is converted to square feet.
-    :param string: str.
-    :return: float.
-    """
-    string = string.replace(',', '')
-
-    if string.endswith('Acres'):
-        string = string.strip('Acres')
-        mult = 43560.
-        return float(string) * mult
-
-    elif string.endswith('Sq. Ft.'):
-        string = string.strip('Sq. Ft.')
-        mult = 1.
-        return float(string) * mult
-
-    else:
-        return np.nan
-
-
-def clean_home_stats_df(all_home_stats):
-    """
-    Accepts the list of dictionaries loaded via load_all_home_stats and returns a cleaned DataFrame.
-
-    :param all_home_stats: accepts a raw home_stats_df straight from the pickle via load_all_home_stats
-    :return: pd.DataFrame home_stats_df
-    """
-    """ Removes columns with spotty data. 
-
-    ['Sales Price']: Removes rows without a Sales Price, removes all non-numeric characters from 'Sales Price'
-    """
-
-    home_stats_df = pd.DataFrame(all_home_stats)
-
-    drop_list = ['Accessible',
-                 'APN',
-                 'Basement',
-                 'Features',
-                 'Finished Sq. Ft.',
-                 'Garage',
-                 'HOA Dues',
-                 'Parking Spaces',
-                 'Unfinished Sq. Ft.',
-                 ]
-
-    home_stats_df.drop(drop_list, axis=1, inplace=True)
-
-    home_stats_df.fillna(value='-', inplace=True)  # Do this so string methods can be universally applied below.
-
-    to_numeric_list = ['Baths',
-                       'Beds',
-                       'Sales Price',
-                       'Stories',
-                       'Total Sq. Ft.',
-                       'Year Built',
-                       'Year Renovated',
-                       ]
-
-    for key in to_numeric_list:
-        home_stats_df[key] = home_stats_df[key].map(lambda string: string.replace('$', ''))
-        home_stats_df[key] = home_stats_df[key].map(lambda string: string.replace(',', ''))
-
-        home_stats_df[key] = pd.to_numeric(home_stats_df[key], errors='coerce')
-
-    home_stats_df = home_stats_df[pd.notnull(home_stats_df['Sales Price'])]
-
-    home_stats_df = home_stats_df[pd.notnull(home_stats_df['Last Sold'])]
-    home_stats_df['Last Sold'] = pd.to_datetime(home_stats_df['Last Sold'], format='%b %d, %Y')
-    home_stats_df = home_stats_df[home_stats_df['Last Sold'] > datetime.strptime('2015-05-01', '%Y-%m-%d')]
-    home_stats_df['Weeks'] = ((home_stats_df['Last Sold'])
-                              .map(lambda td: (td - home_stats_df['Last Sold'].min()).days // 7)
-                              )
-    home_stats_df['Month'] = home_stats_df['Last Sold'].map(lambda s: s.month)
-    # Creates a new Lot Size column in units sq. ft. and drop the old column
-    home_stats_df['Lot Size Sq. Ft.'] = home_stats_df['Lot Size'].map(clean_lot_size)
-
-    home_stats_df.drop('Lot Size', axis=1, inplace=True)
-
-    # Remove +4 zip code extension and eliminate errant zip codes
-    home_stats_df['Zip Code'] = home_stats_df['Zip Code'].map(lambda string: string.split('-')[0])
-    zip_group = home_stats_df.groupby('Zip Code')
-    home_stats_df = zip_group.filter(lambda x: len(x) > 100)
-
-    # Remove Styles with low incidence. I.e. "Unknown, Vacant Land, Mobile Homes,
-
-    drop_styles_list = ['Vacant Land', 'Other', 'Unknown', 'Mobile/Manufactured Home']
-    home_stats_df = home_stats_df[~home_stats_df['Style'].isin(drop_styles_list)]
-
-    return home_stats_df
-
 
 def main():
     pass
@@ -422,7 +305,21 @@ def main():
 
 if __name__ == '__main__':
 
-    zipcode_dict2 = {'94601': ('Fruitvale', 'Oakland', 'CA'),
+    zipcode_dict2 = {'94605': ('Oakland', 'CA'),
+                     '94610': ('Oakland', 'CA'),
+                     '94611': ('Oakland', 'CA'),
+                     '94110': ('San Francisco', 'CA'),
+                     '95476': ('Sonoma', 'CA'),
+                     '94549': ('Lafayette', 'CA'),
+                     '90403': ('Santa Monica', 'CA'),
+                     '90049': ('Los Angeles', 'CA'),
+                     '90292': ('Los Angeles', 'CA'),
+                     '90301': ('Los Angeles', 'CA'),
+                     '11211': ('Brooklyn', 'NY'),
+                     '10024': ('New York', 'NY'),
+                     '48503': ('Flint', 'MI'),
+                     '77373': ('Houston', 'TX'),
+                     '94601': ('Fruitvale', 'Oakland', 'CA'),
                      '94603': ('Elmhurst', 'Oakland', 'CA'),
                      '94607': ('West Oakland', 'Oakland', 'CA'),
                      '94618': ('Rockridge', 'Oakland', 'CA'),
