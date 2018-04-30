@@ -74,6 +74,9 @@ def make_soup_via_selenium(url):
 def find_home_listing_urls(soup):
     """
     Finds all the relative individual house data links on a landing page.
+
+    :param soup: a bs4 Soup object
+    :return:  list of strings. Each string is a relative URL representing one house listing.
     """
     listing_url_list = []
     for url in soup.find_all("a", class_="cover-all"):
@@ -185,9 +188,9 @@ def get_home_soup(home_rel_url):
 
 def get_property_history(home_soup):
     """
-
+    Returns a dict of the uppermost "sold event" row of the Property History Table on a Redfin listing.
     :param home_soup: BeautifulSoup object made by get_home_soup(home_rel_url).
-    :return:
+    :return: dict. Keys are 'Last Sold' and 'Sales Price'. Values are strings.
     """
     sold_row_soup = home_soup.find("tr", class_="sold-row PropertyHistoryEventRow")
 
@@ -209,7 +212,7 @@ def get_property_history(home_soup):
 
 def get_home_facts(home_soup):
     """
-
+    Returns a dict of all rows of the Home Facts Table on a Redfin listing.
     :param home_soup: BeautifulSoup object made by get_home_soup(home_rel_url).
     :return: dict of (key, value) pairs from the Home Facts table.
     """
@@ -227,7 +230,7 @@ def get_home_facts(home_soup):
 
 def get_zipcode(home_soup):
     """
-
+    Returns a dictionary with a listing's zip code.
     :param home_soup: BeautifulSoup object made by get_home_soup(home_rel_url).
     :return: dict. E.g. {'Zip Code': '94605'}
     """

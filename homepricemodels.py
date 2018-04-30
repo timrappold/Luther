@@ -2,21 +2,15 @@ import numpy as np
 import pandas as pd
 import pickle
 from datetime import datetime
+
 import matplotlib.pyplot as plt
+
 import scipy.stats as stats
 import statsmodels.api as sm
+
 from statsmodels.stats.outliers_influence import variance_inflation_factor
-
-
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import Lasso
-# from sklearn.metrics import mean_squared_error, r2_score
-
-
-
-
-
-# import redfin
 
 
 def load_all_home_stats(pickle_file='pickles/combined_home_stats.pkl'):
@@ -121,15 +115,9 @@ def clean_home_stats_df(all_home_stats):
         zip_group = home_stats_df.groupby('Zip Code')
         home_stats_df = zip_group.filter(lambda x: len(x) > 100)
 
-    #print('Home_stats_DF after Zip Codes filter: ', home_stats_df)
-
-
     # Down-select Zip Codes to Oakland and Los Angeles only:
     home_stats_df = (home_stats_df[home_stats_df['Zip Code'].str.startswith('946') | home_stats_df['Zip Code']
                      .str.startswith('90')])
-
-    # print('Home_stats_DF after Zip Codes: ', home_stats_df)
-
 
     # Fill NaNs in Year Renovated with values from Year Built. I.e. the home was last "new" when it was built.
     home_stats_df['Year Renovated'].fillna(home_stats_df['Year Built'], inplace=True)
@@ -138,9 +126,6 @@ def clean_home_stats_df(all_home_stats):
     drop_styles_list = ['Vacant Land', 'Other', 'Unknown', 'Mobile/Manufactured Home',
                         'Multi-Family (2-4 Unit)', 'Multi-Family (5+ Unit)']
     home_stats_df = home_stats_df[~home_stats_df['Style'].isin(drop_styles_list)]
-
-    #print('Home_stats_DF after Style drop: ', home_stats_df)
-
 
     # Drop all remaining rows that have ANY NaNs:
     home_stats_df.dropna(axis=0, how='any', inplace=True)
@@ -332,10 +317,11 @@ def lasso_loop(X_train, y_train):
 
 def get_vif(X):
     """
-    Get a DataFrame
-    :param X:
-    :return:
+    Get a DataFrame of Variance Inflation Factors.
+    :param X: pandas DataFrame. Design matrix/feature matrix.
+    :return: A DataFrame with a VIF score for each feature.
     """
+
     X = X.select_dtypes(include=['float64', 'uint8'])
 
     vif = pd.DataFrame()
