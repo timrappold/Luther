@@ -2,7 +2,6 @@ import os
 import sys
 import pickle
 import time
-from datetime import datetime
 
 import numpy as np
 import pandas as pd
@@ -151,7 +150,7 @@ def combine_zipcode_listings_pickles_into_one(pickle_directory='pickles/'):
 
     return None
 
-### GET DATA FROM INDIVIDUAL HOME LISTING ###################################################
+### SCRAPE DATA AND SAVE: ###################################################
 
 
 def load_all_urls(pickle_file='pickles/listing_urls_all.pkl'):
@@ -256,9 +255,6 @@ def get_home_stats(home_rel_url):
     return {**home_rel_url_dict, **zipcode, **property_history, **home_facts}
 
 
-### SCRAPE AND SAVE ######################################################################
-
-
 def scrape_home_stats(list_of_relative_urls=None, pickle_directory='pickles/', save_every=250):
     """
     Loops through list_of_relative_urls, scrapes home listing data, and stores it all in a pickle. As as
@@ -293,10 +289,6 @@ def scrape_home_stats(list_of_relative_urls=None, pickle_directory='pickles/', s
         pickle.dump(all_home_stats, picklefile)
 
     return all_home_stats
-
-
-### LOAD and CLEAN DATA #####################################################################################
-
 
 
 def main():

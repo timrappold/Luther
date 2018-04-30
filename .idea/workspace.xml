@@ -2,10 +2,57 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9af6372d-849a-41ea-8446-83017ea407a3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/explore_luther.ipynb" afterPath="$PROJECT_DIR$/explore_luther.ipynb" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/explore_luther.ipynb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_0.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_1000.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_1250.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_1500.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_1750.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_2000.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_2250.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_250.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_2500.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_2750.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_3000.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_3250.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_3500.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_3750.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_4000.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_4250.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_4500.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_4750.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_500.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_5000.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_5250.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_5500.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_5750.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/home_stats_all_750.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_90024_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_90026_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_90027_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_90039_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_90041_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_90056_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_90069_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_90221_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_90232_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_94601_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_94602_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_94603_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_94606_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_94607_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_94609_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_94618_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/pickles/listing_urls_94619_all.pkl" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/rappold_tim_challenge_05_linear_splitting.ipynb" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/redfin_2018-04-18-08-51-54.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sample_homes.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sample_homes.numbers" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/sample_homes2.csv" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Is_adding_that_bedroom_worth_it.key" afterPath="$PROJECT_DIR$/Is_adding_that_bedroom_worth_it.key" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/homepricemodels.py" afterPath="$PROJECT_DIR$/homepricemodels.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rappold_tim_challenge_05_linear_splitting.ipynb" afterPath="$PROJECT_DIR$/rappold_tim_challenge_05_linear_splitting.ipynb" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/redfin.py" afterPath="$PROJECT_DIR$/redfin.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,38 +63,39 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="redfin.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="redfin.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/redfin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1320">
-              <caret line="324" column="27" lean-forward="false" selection-start-line="324" selection-start-column="22" selection-end-line="324" selection-end-column="27" />
+            <state relative-caret-position="523">
+              <caret line="155" column="61" lean-forward="false" selection-start-line="155" selection-start-column="4" selection-end-line="155" selection-end-column="61" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
-                <element signature="e#424#1198#0" expanded="false" />
-                <element signature="e#1238#1803#0" expanded="false" />
-                <element signature="e#1844#2084#0" expanded="false" />
-                <element signature="e#2159#3799#0" expanded="false" />
-                <element signature="e#3882#4561#0" expanded="false" />
-                <element signature="e#4726#5069#0" expanded="false" />
-                <element signature="e#5109#5763#0" expanded="false" />
-                <element signature="e#5807#6481#0" expanded="false" />
-                <element signature="e#6519#7017#0" expanded="false" />
-                <element signature="e#7052#7372#0" expanded="false" />
-                <element signature="e#7413#8128#0" expanded="false" />
-                <element signature="e#8324#9854#0" expanded="false" />
+                <element signature="e#394#1168#0" expanded="false" />
+                <element signature="e#1208#1773#0" expanded="false" />
+                <element signature="e#1814#2054#0" expanded="false" />
+                <element signature="e#2129#3769#0" expanded="false" />
+                <element signature="e#3852#4531#0" expanded="false" />
+                <element signature="e#4680#5023#0" expanded="false" />
+                <element signature="e#5063#5717#0" expanded="false" />
+                <element signature="e#5761#6435#0" expanded="false" />
+                <element signature="e#6473#6971#0" expanded="false" />
+                <element signature="e#7006#7326#0" expanded="false" />
+                <element signature="e#7367#8082#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="homepricemodels.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="homepricemodels.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/homepricemodels.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+            <state relative-caret-position="280">
+              <caret line="192" column="36" lean-forward="false" selection-start-line="192" selection-start-column="36" selection-end-line="192" selection-end-column="36" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <element signature="e#692#1240#0" expanded="false" />
+                <element signature="e#7236#7770#0" expanded="false" />
+                <element signature="e#10989#11293#0" expanded="false" />
+                <element signature="e#11332#12648#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -89,8 +137,8 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="width" value="1280" />
-    <option name="height" value="800" />
+    <option name="width" value="1440" />
+    <option name="height" value="900" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -118,8 +166,8 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -151,18 +199,19 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17265625" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17222223" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.08933333" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.075294115" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -189,29 +238,17 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#424#1198#0" expanded="false" />
-            <element signature="e#1238#1803#0" expanded="false" />
-            <element signature="e#1844#2084#0" expanded="false" />
-            <element signature="e#2159#3799#0" expanded="false" />
-            <element signature="e#3882#4561#0" expanded="false" />
-            <element signature="e#4726#5069#0" expanded="false" />
-            <element signature="e#5109#5763#0" expanded="false" />
-            <element signature="e#5807#6481#0" expanded="false" />
-            <element signature="e#6519#7017#0" expanded="false" />
-            <element signature="e#7052#7372#0" expanded="false" />
-            <element signature="e#7413#8128#0" expanded="false" />
-            <element signature="e#8324#9854#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/homepricemodels.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="24" column="25" lean-forward="true" selection-start-line="24" selection-start-column="25" selection-end-line="24" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#692#1240#0" expanded="false" />
+            <element signature="e#394#1168#0" expanded="false" />
+            <element signature="e#1208#1773#0" expanded="false" />
+            <element signature="e#1814#2054#0" expanded="false" />
+            <element signature="e#2129#3769#0" expanded="false" />
+            <element signature="e#3852#4531#0" expanded="false" />
+            <element signature="e#4680#5023#0" expanded="false" />
+            <element signature="e#5063#5717#0" expanded="false" />
+            <element signature="e#5761#6435#0" expanded="false" />
+            <element signature="e#6473#6971#0" expanded="false" />
+            <element signature="e#7006#7326#0" expanded="false" />
+            <element signature="e#7367#8082#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -222,18 +259,51 @@
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#424#1198#0" expanded="false" />
-            <element signature="e#1238#1803#0" expanded="false" />
-            <element signature="e#1844#2084#0" expanded="false" />
-            <element signature="e#2159#3799#0" expanded="false" />
-            <element signature="e#3882#4561#0" expanded="false" />
-            <element signature="e#4726#5069#0" expanded="false" />
-            <element signature="e#5109#5763#0" expanded="false" />
-            <element signature="e#5807#6481#0" expanded="false" />
-            <element signature="e#6519#7017#0" expanded="false" />
-            <element signature="e#7052#7372#0" expanded="false" />
-            <element signature="e#7413#8128#0" expanded="false" />
-            <element signature="e#8324#9854#0" expanded="false" />
+            <element signature="e#394#1168#0" expanded="false" />
+            <element signature="e#1208#1773#0" expanded="false" />
+            <element signature="e#1814#2054#0" expanded="false" />
+            <element signature="e#2129#3769#0" expanded="false" />
+            <element signature="e#3852#4531#0" expanded="false" />
+            <element signature="e#4680#5023#0" expanded="false" />
+            <element signature="e#5063#5717#0" expanded="false" />
+            <element signature="e#5761#6435#0" expanded="false" />
+            <element signature="e#6473#6971#0" expanded="false" />
+            <element signature="e#7006#7326#0" expanded="false" />
+            <element signature="e#7367#8082#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/homepricemodels.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="24" column="25" lean-forward="true" selection-start-line="24" selection-start-column="25" selection-end-line="24" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#7236#7770#0" expanded="false" />
+            <element signature="e#10989#11293#0" expanded="false" />
+            <element signature="e#11332#12648#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/redfin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#394#1168#0" expanded="false" />
+            <element signature="e#1208#1773#0" expanded="false" />
+            <element signature="e#1814#2054#0" expanded="false" />
+            <element signature="e#2129#3769#0" expanded="false" />
+            <element signature="e#3852#4531#0" expanded="false" />
+            <element signature="e#4680#5023#0" expanded="false" />
+            <element signature="e#5063#5717#0" expanded="false" />
+            <element signature="e#5761#6435#0" expanded="false" />
+            <element signature="e#6473#6971#0" expanded="false" />
+            <element signature="e#7006#7326#0" expanded="false" />
+            <element signature="e#7367#8082#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -259,35 +329,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/redfin.py">
+    <entry file="file://$PROJECT_DIR$/homepricemodels.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1320">
-          <caret line="324" column="27" lean-forward="false" selection-start-line="324" selection-start-column="22" selection-end-line="324" selection-end-column="27" />
+        <state relative-caret-position="280">
+          <caret line="192" column="36" lean-forward="false" selection-start-line="192" selection-start-column="36" selection-end-line="192" selection-end-column="36" />
           <folding>
-            <element signature="e#0#9#0" expanded="true" />
-            <element signature="e#424#1198#0" expanded="false" />
-            <element signature="e#1238#1803#0" expanded="false" />
-            <element signature="e#1844#2084#0" expanded="false" />
-            <element signature="e#2159#3799#0" expanded="false" />
-            <element signature="e#3882#4561#0" expanded="false" />
-            <element signature="e#4726#5069#0" expanded="false" />
-            <element signature="e#5109#5763#0" expanded="false" />
-            <element signature="e#5807#6481#0" expanded="false" />
-            <element signature="e#6519#7017#0" expanded="false" />
-            <element signature="e#7052#7372#0" expanded="false" />
-            <element signature="e#7413#8128#0" expanded="false" />
-            <element signature="e#8324#9854#0" expanded="false" />
+            <element signature="e#0#18#0" expanded="true" />
+            <element signature="e#7236#7770#0" expanded="false" />
+            <element signature="e#10989#11293#0" expanded="false" />
+            <element signature="e#11332#12648#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/homepricemodels.py">
+    <entry file="file://$PROJECT_DIR$/redfin.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+        <state relative-caret-position="523">
+          <caret line="155" column="61" lean-forward="false" selection-start-line="155" selection-start-column="4" selection-end-line="155" selection-end-column="61" />
           <folding>
-            <element signature="e#0#18#0" expanded="true" />
-            <element signature="e#692#1240#0" expanded="false" />
+            <element signature="e#0#9#0" expanded="true" />
+            <element signature="e#394#1168#0" expanded="false" />
+            <element signature="e#1208#1773#0" expanded="false" />
+            <element signature="e#1814#2054#0" expanded="false" />
+            <element signature="e#2129#3769#0" expanded="false" />
+            <element signature="e#3852#4531#0" expanded="false" />
+            <element signature="e#4680#5023#0" expanded="false" />
+            <element signature="e#5063#5717#0" expanded="false" />
+            <element signature="e#5761#6435#0" expanded="false" />
+            <element signature="e#6473#6971#0" expanded="false" />
+            <element signature="e#7006#7326#0" expanded="false" />
+            <element signature="e#7367#8082#0" expanded="false" />
           </folding>
         </state>
       </provider>

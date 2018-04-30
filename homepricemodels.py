@@ -8,10 +8,18 @@ import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
+from sklearn.model_selection import GridSearchCV
+from sklearn.linear_model import Lasso
+# from sklearn.metrics import mean_squared_error, r2_score
+
+
+
+
+
 # import redfin
 
 
-def load_all_home_stats(pickle_file='pickles/home_stats_all.pkl'):
+def load_all_home_stats(pickle_file='pickles/combined_home_stats.pkl'):
     """
     Loads pickle file that contains the stats of all individual home listings on scraped from Redfin.
 
@@ -60,7 +68,6 @@ def clean_home_stats_df(all_home_stats):
     """
 
     home_stats_df = pd.DataFrame(all_home_stats)
-    print('Home_stats_DF 1: ', home_stats_df)
 
     drop_list = ['Accessible',
                  'APN',
@@ -77,9 +84,6 @@ def clean_home_stats_df(all_home_stats):
     for col in home_stats_df.columns:
         if col in drop_list:
             home_stats_df.drop(col, axis=1, inplace=True)
-
-    print('Home_stats_DF 2: ', home_stats_df)
-
 
     home_stats_df.fillna(value='-', inplace=True)  # Do this so string methods can be universally applied below.
 
@@ -108,7 +112,7 @@ def clean_home_stats_df(all_home_stats):
     home_stats_df['Lot Size Sq. Ft.'] = home_stats_df['Lot Size'].map(clean_lot_size)
     home_stats_df.drop('Lot Size', axis=1, inplace=True)
 
-    print('Length of Home_stats_DF after Lot Size: ', len(home_stats_df))
+    # print('Length of Home_stats_DF after Lot Size: ', len(home_stats_df))
 
     # Remove +4 zip code extension and eliminate errant zip codes
     home_stats_df['Zip Code'] = home_stats_df['Zip Code'].map(lambda string: string.split('-')[0])
@@ -117,14 +121,14 @@ def clean_home_stats_df(all_home_stats):
         zip_group = home_stats_df.groupby('Zip Code')
         home_stats_df = zip_group.filter(lambda x: len(x) > 100)
 
-    print('Home_stats_DF after Zip Codes filter: ', home_stats_df)
+    #print('Home_stats_DF after Zip Codes filter: ', home_stats_df)
 
 
     # Down-select Zip Codes to Oakland and Los Angeles only:
     home_stats_df = (home_stats_df[home_stats_df['Zip Code'].str.startswith('946') | home_stats_df['Zip Code']
                      .str.startswith('90')])
 
-    print('Home_stats_DF after Zip Codes: ', home_stats_df)
+    # print('Home_stats_DF after Zip Codes: ', home_stats_df)
 
 
     # Fill NaNs in Year Renovated with values from Year Built. I.e. the home was last "new" when it was built.
@@ -135,7 +139,7 @@ def clean_home_stats_df(all_home_stats):
                         'Multi-Family (2-4 Unit)', 'Multi-Family (5+ Unit)']
     home_stats_df = home_stats_df[~home_stats_df['Style'].isin(drop_styles_list)]
 
-    print('Home_stats_DF after Style drop: ', home_stats_df)
+    #print('Home_stats_DF after Style drop: ', home_stats_df)
 
 
     # Drop all remaining rows that have ANY NaNs:
@@ -229,6 +233,103 @@ def sm_ols_wrapper(y, X=None):
     return results
 
 
+def get_gridsearch_lasso(X_train, y_train, score='r2', kfold=5):
+    """
+    Wrapper for gridsearchCv. Returns optimized hyper-parameters and provides a number of easy-to-follow print-outs.
+    :param X_train: design matrix training set
+    :param y_train: target training set.
+    :param score: scoring method, defaults to R^2.
+    :param kfold: Number of folds in the cross-validation.
+    :return: dict of best_params_.
+    """
+    # Set the parameters by cross-validation
+    tuned_parameters = [{'alpha': [1e-4, 1e-3, 1e-2, 1e-1, 1, 10, 100],
+                         'normalize': [True, False]}]
+
+    print("# Tuning hyper-parameters for %s" % 'r2')
+    print()
+
+    reg = GridSearchCV(Lasso(), tuned_parameters, cv=kfold,
+                       scoring=score)
+    reg.fit(X_train, y_train)
+
+    print("Best parameters set found on development set:")
+    print()
+    print(reg.best_params_)
+    print()
+    print("Grid scores on development set:")
+    print()
+    means = reg.cv_results_['mean_test_score']
+    stds = reg.cv_results_['std_test_score']
+    for mean, std, params in zip(means, stds, reg.cv_results_['params']):
+        print("%0.4f (+/-%0.04f) for %r"
+              % (mean, std * 2, params))
+    print()
+    return reg.best_params_
+
+
+def get_lasso(X_train, y_train, alpha, normalize):
+    """
+    Wrapper for Lasso. Returns the sklearn regression object as well as a list of features whose coefficients aren't zero.
+    :param X_train:
+    :param y_train:
+    :param alpha:
+    :param normalize:
+    :return: tuple of regression object and "not_null" list of features: (reg, not_null_list)
+    """
+    reg = Lasso(alpha=alpha, normalize=normalize)
+    reg.fit(X_train, y_train)
+
+    not_null_list = []
+
+    for tup in list(zip(X_train.columns, reg.coef_)):
+        print(tup)
+        if abs(tup[1]) > 0.001:
+            not_null_list.append(tup)
+    return reg, not_null_list
+
+
+def get_lasso_with_gridsearch(X_train, y_train):
+    """
+    Combines get_gridsearch_lasso and get_lasso into one pipeline.
+    :param X_train:
+    :param y_train:
+    :return:
+    """
+
+    best_params_ = get_gridsearch_lasso(X_train, y_train, score='r2', kfold=5)
+    print(best_params_)
+    return get_lasso(X_train, y_train, best_params_['alpha'], best_params_['normalize'])
+
+
+def lasso_loop(X_train, y_train):
+    """
+    Step-backward Model selection algorithm using Lasso and Gridsearch. Returns sklearn Estimator `reg`, not_null_list (which
+    is a list of tuples of the form [(feature, values), ...] and the list `features` of the form ['feature1, 'feature2', ...]
+
+    :param X_train: design matrix. Pandas DataFrame.
+    :param y_train: target vector. Pandas Series.
+    :return: (reg, not_null_list, features)
+    """
+    diff_not_null_list = 1
+
+    while diff_not_null_list > 0:
+
+        print('The design matrix has {} features.'.format(len(X_train.columns)))
+
+        reg, not_null_list = get_lasso_with_gridsearch(X_train, y_train)
+
+        features = []
+        for feature in not_null_list:
+            features.append(feature[0])
+
+        diff_not_null_list = len(X_train.columns) - len(features)
+
+        X_train = X_train[features]
+
+    return reg, not_null_list, features
+
+
 def get_vif(X):
     """
     Get a DataFrame
@@ -266,8 +367,8 @@ def diagnostic_plot(y_pred, y):
     plt.title("Predicted vs Actual")
     plt.xlabel("Y Predicted")
     plt.ylabel("Y Actual")
-    plt.ylim([0, 1.5e7])  # remove in the future
-    # plt.ylim([0, 1.05*y_pred.max()])
+    # plt.ylim([0, 1.5e7])  # remove in the future
+    plt.ylim([0, 1.05*y_pred.max()])
     plt.xlim([0, 1.05*y_pred.max()])
 
     plt.subplot(1, 3, 2)
@@ -276,7 +377,7 @@ def diagnostic_plot(y_pred, y):
     plt.title("Residual plot")
     plt.xlabel("prediction")
     plt.ylabel("residuals")
-    plt.ylim([-1.5e7, 1.5e7])  # remove in the future
+    #plt.ylim([-1.5e7, 1.5e7])  # remove in the future
 
     ax = plt.subplot(1, 3, 3)
     # Generates a probability plot of sample data against the quantiles of a
@@ -286,8 +387,8 @@ def diagnostic_plot(y_pred, y):
     # ax.get_lines()[0].set_marker('p')
     # ax.get_lines()[0].set_markerfacecolor('r')
     plt.title("Normal Q-Q plot")
-    plt.ylim([-0.2e7, 0.2e7])  # remove in the future
-    plt.xlim([-2, 2])          # remove in the future
+    #plt.ylim([-0.2e7, 0.2e7])  # remove in the future
+    #plt.xlim([-2, 2])          # remove in the future
 
 
 def main():
